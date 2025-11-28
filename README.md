@@ -2,6 +2,10 @@
 
 A Dify plugin that enables Git-based version control for managing workflows and applications.
 
+## Testing
+
+See [TESTING.md](TESTING.md) for detailed instructions on how to test if endpoints are up and running.
+
 ## Features
 
 - 🔗 **Repository Management**: Connect and manage Git repositories
