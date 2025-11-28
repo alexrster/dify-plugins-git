@@ -15,8 +15,7 @@ resource:
 plugins:
   tools: []
   models: []
-  endpoints:
-    - endpoints/manifest.yaml
+  endpoints: []
   agent_strategies: []
   datasources: []
   triggers: []
