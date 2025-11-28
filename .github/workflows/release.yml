@@ -97,35 +97,34 @@ jobs:
               -x "*.pyc" "*/__pycache__/*" "*/.git/*" "*/.pytest_cache/*" "*/tests/*" "*/.github/*" "*/dist/*" "*/build/*" "*.egg-info/*" "*.log" ".env" "*.private.pem" "*.public.pem"
           else
             echo "zip command not available, using Python"
-            python3 -c "
-import zipfile
-import os
-from pathlib import Path
-import sys
-
-PACKAGE_FILE = sys.argv[1]
-excludes = {'.git', 'tests', '.github', 'dist', 'build', '__pycache__', '.pytest_cache', '.env'}
-files_to_include = [
-    'manifest.yaml', 'main.py', 'requirements.txt',
-    'endpoints', 'services', 'models', 'utils', '_assets'
-]
-
-with zipfile.ZipFile(PACKAGE_FILE, 'w', zipfile.ZIP_DEFLATED) as zf:
-    for item in files_to_include:
-        path = Path(item)
-        if path.is_file():
-            zf.write(path)
-        elif path.is_dir():
-            for root, dirs, files in os.walk(path):
-                dirs[:] = [d for d in dirs if d not in excludes and not d.startswith('.')]
-                for file in files:
-                    if not any(file.endswith(ext) for ext in ['.pyc', '.log', '.pem', '.egg-info']):
-                        file_path = Path(root) / file
-                        zf.write(file_path)
-print(f'Package created: {PACKAGE_FILE}')
-" "${PACKAGE_FILE}"
-          fi
-        fi
+            printf '%s\n' \
+              'import zipfile' \
+              'import os' \
+              'from pathlib import Path' \
+              'import sys' \
+              '' \
+              'PACKAGE_FILE = sys.argv[1]' \
+              "excludes = {'.git', 'tests', '.github', 'dist', 'build', '__pycache__', '.pytest_cache', '.env'}" \
+              'files_to_include = [' \
+              "    'manifest.yaml', 'main.py', 'requirements.txt'," \
+              "    'endpoints', 'services', 'models', 'utils', '_assets'" \
+              ']' \
+              '' \
+              'with zipfile.ZipFile(PACKAGE_FILE, "w", zipfile.ZIP_DEFLATED) as zf:' \
+              '    for item in files_to_include:' \
+              '        path = Path(item)' \
+              '        if path.is_file():' \
+              '            zf.write(path)' \
+              '        elif path.is_dir():' \
+              '            for root, dirs, files in os.walk(path):' \
+              '                dirs[:] = [d for d in dirs if d not in excludes and not d.startswith(".")]' \
+              '                for file in files:' \
+              '                    if not any(file.endswith(ext) for ext in [".pyc", ".log", ".pem", ".egg-info"]):' \
+              '                        file_path = Path(root) / file' \
+              '                        zf.write(file_path)' \
+              'print(f"Package created: {PACKAGE_FILE}")' > /tmp/create_package.py
+            python3 /tmp/create_package.py "${PACKAGE_FILE}"
+            rm -f /tmp/create_package.py
         
         echo "package_file=${PACKAGE_FILE}" >> $GITHUB_OUTPUT
         echo "Package created: ${PACKAGE_FILE}"
