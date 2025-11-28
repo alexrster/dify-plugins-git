@@ -125,6 +125,8 @@ jobs:
               'print(f"Package created: {PACKAGE_FILE}")' > /tmp/create_package.py
             python3 /tmp/create_package.py "${PACKAGE_FILE}"
             rm -f /tmp/create_package.py
+          fi
+        fi
         
         echo "package_file=${PACKAGE_FILE}" >> $GITHUB_OUTPUT
         echo "Package created: ${PACKAGE_FILE}"
