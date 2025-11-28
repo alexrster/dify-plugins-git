@@ -131,7 +131,7 @@ jobs:
         mkdir -p dist
         # If dify CLI is available, use it; otherwise create manual package
         if command -v dify &> /dev/null; then
-          dify plugin package . -o dist/
+          dify plugin package . -o dist/git-integration-plugin.difypkg
         else
           echo "Dify CLI not available, creating manual package"
           tar -czf dist/git-integration-plugin.tar.gz \

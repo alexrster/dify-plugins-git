@@ -1,48 +1,46 @@
-api_version: v1
-kind: extension
-plugin:
-  name: git-integration
-  author: Dify Community
-  description: Git integration plugin for managing Dify workflows and applications with version control
-  version: 0.1.0
-  icon: icon.svg
-  tags:
-    - git
-    - version-control
-    - workflow-management
-  permissions:
-    - tools
-    - llms
-    - apps
-    - storage
-    - endpoints
-  configuration:
-    - name: default_branch
-      type: string
-      default: main
-      description: Default branch name for Git operations
-    - name: auto_sync_enabled
-      type: boolean
-      default: false
-      description: Enable automatic synchronization (opt-in)
-    - name: sync_interval
-      type: number
-      default: 60
-      description: Auto-sync interval in minutes
-    - name: export_format
-      type: string
-      default: json
-      enum:
-        - json
-        - yaml
-      description: Export file format
-    - name: file_naming
-      type: string
-      default: id-name
-      enum:
-        - id
-        - name
-        - id-name
-      description: File naming convention
-
-
+version: "0.1.0"
+type: plugin
+author: alexrster
+name: git-integration
+repo: https://github.com/alexrster/dify-plugins-git
+description:
+  en_US: Git integration plugin for managing Dify workflows and applications with version control
+label:
+  en_US: Git Integration
+icon: icon.svg
+icon_dark: icon-dark.svg
+created_at: 2025-11-28T00:00:00Z
+resource:
+  memory: 512
+plugins:
+  tools: []
+  models: []
+  endpoints:
+    - endpoints/manifest.yaml
+  agent_strategies: []
+  datasources: []
+  triggers: []
+meta:
+  version: "0.0.1"
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main.py
+  minimum_dify_version: "0.6.0"
+permission:
+  tool:
+    enabled: false
+  model:
+    enabled: false
+  node:
+    enabled: false
+  endpoint:
+    enabled: true
+  app:
+    enabled: true
+  storage:
+    enabled: true
+    size: 10485760

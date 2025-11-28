@@ -66,3 +66,11 @@ bandit-report.json
 # CI/CD
 .github/workflows/.env
 
+# Plugin signing keys (NEVER commit private keys!)
+*.private.pem
+*_keypair.private.pem
+*.public.pem
+*_keypair.public.pem
+keys/
+.keypair/
+

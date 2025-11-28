@@ -1,7 +1,8 @@
 """Data models for Git Integration Plugin"""
+
 from .repository import Repository, RepositoryConfig
-from .workflow import WorkflowExport, ApplicationExport
 from .sync import SyncState, SyncStatus
+from .workflow import ApplicationExport, WorkflowExport
 
 __all__ = [
     "Repository",
@@ -11,5 +12,3 @@ __all__ = [
     "SyncState",
     "SyncStatus",
 ]
-
-

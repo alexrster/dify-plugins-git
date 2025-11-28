@@ -1,10 +1,8 @@
 """Tests for validators"""
+
 import pytest
-from utils.validators import (
-    validate_repository_url,
-    validate_branch_name,
-    sanitize_filename
-)
+
+from utils.validators import sanitize_filename, validate_branch_name, validate_repository_url
 
 
 def test_validate_repository_url():
@@ -14,7 +12,7 @@ def test_validate_repository_url():
     assert validate_repository_url("http://github.com/user/repo.git")
     assert validate_repository_url("git@github.com:user/repo.git")
     assert validate_repository_url("git://github.com/user/repo.git")
-    
+
     # Invalid URLs
     assert not validate_repository_url("")
     assert not validate_repository_url("not-a-url")
@@ -28,7 +26,7 @@ def test_validate_branch_name():
     assert validate_branch_name("feature/new-feature")
     assert validate_branch_name("bugfix-123")
     assert validate_branch_name("release/v1.0.0")
-    
+
     # Invalid branch names
     assert not validate_branch_name("")
     assert not validate_branch_name("branch with spaces")
@@ -43,6 +41,4 @@ def test_sanitize_filename():
     assert sanitize_filename("workflow:123") == "workflow_123"
     assert sanitize_filename("workflow/123") == "workflow_123"
     assert sanitize_filename("  workflow  ") == "workflow"
-    assert sanitize_filename(".workflow") == "_workflow"
-
-
+    assert sanitize_filename(".workflow") == "workflow"

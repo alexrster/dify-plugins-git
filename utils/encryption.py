@@ -1,6 +1,8 @@
 """Encryption utilities"""
-from cryptography.fernet import Fernet
+
 import base64
+
+from cryptography.fernet import Fernet
 
 
 def encrypt_data(data: bytes, key: bytes) -> str:
@@ -15,5 +17,3 @@ def decrypt_data(encrypted_data: str, key: bytes) -> bytes:
     cipher = Fernet(key)
     encrypted_bytes = base64.urlsafe_b64decode(encrypted_data.encode())
     return cipher.decrypt(encrypted_bytes)
-
-

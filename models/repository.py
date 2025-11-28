@@ -1,11 +1,14 @@
 """Repository models"""
+
 from datetime import datetime
-from typing import Optional, Literal
+from typing import Literal, Optional
+
 from pydantic import BaseModel, Field, HttpUrl
 
 
 class RepositoryConfig(BaseModel):
     """Repository configuration"""
+
     id: str
     name: str
     url: str = Field(..., description="Git repository URL")
@@ -22,6 +25,7 @@ class RepositoryConfig(BaseModel):
 
 class Repository(BaseModel):
     """Repository model with status"""
+
     config: RepositoryConfig
     current_branch: Optional[str] = None
     last_sync: Optional[datetime] = None
@@ -29,5 +33,3 @@ class Repository(BaseModel):
     has_conflicts: bool = False
     status: Literal["connected", "disconnected", "error"] = "disconnected"
     error_message: Optional[str] = None
-
-

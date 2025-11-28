@@ -1,12 +1,15 @@
 """Sync state models"""
+
 from datetime import datetime
-from typing import Optional, List, Dict, Any
-from pydantic import BaseModel, Field
 from enum import Enum
+from typing import Any, Dict, List, Literal, Optional
+
+from pydantic import BaseModel, Field
 
 
 class SyncStatus(str, Enum):
     """Sync status enumeration"""
+
     PENDING = "pending"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
@@ -16,6 +19,7 @@ class SyncStatus(str, Enum):
 
 class SyncState(BaseModel):
     """Sync state model"""
+
     repository_id: str
     status: SyncStatus = SyncStatus.PENDING
     last_sync: Optional[datetime] = None
@@ -24,5 +28,3 @@ class SyncState(BaseModel):
     conflicts: List[Dict[str, Any]] = Field(default_factory=list)
     error_message: Optional[str] = None
     sync_direction: Literal["export", "import", "bidirectional"] = "bidirectional"
-
-

@@ -42,11 +42,23 @@ cp .env.example .env
 
 4. Package the plugin:
 ```bash
-dify plugin package .
+make build
+# or
+dify plugin package . -o dist/git-integration-plugin.difypkg
 ```
 
-5. Install in Dify:
-   - Upload the generated `.difypkg` file through Dify's plugin management interface
+5. **Sign the plugin** (required if Dify has signature verification enabled):
+```bash
+# Generate keys first (one-time setup)
+make generate-keys
+
+# Build and sign the plugin
+make sign
+```
+
+6. Install in Dify:
+   - Upload the **signed** `.difypkg` file (`dist/git-integration-plugin.signed.difypkg`) through Dify's plugin management interface
+   - **Note:** If you get a signature verification error, see [README_SIGNING.md](README_SIGNING.md) for solutions
 
 ## Configuration
 

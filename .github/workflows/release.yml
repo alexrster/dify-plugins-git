@@ -60,7 +60,7 @@ jobs:
       run: |
         mkdir -p dist
         if command -v dify &> /dev/null; then
-          dify plugin package . -o dist/
+          dify plugin package . -o dist/git-integration-plugin-${{ steps.version.outputs.version }}.difypkg
         else
           tar -czf dist/git-integration-plugin-${{ steps.version.outputs.version }}.tar.gz \
             --exclude='.git' \
@@ -76,17 +76,14 @@ jobs:
             .
         fi
     
-    - name: Create .difypkg file
+    - name: Verify package
       run: |
-        # Create a proper .difypkg file (zip format)
-        cd dist
-        if [ -f git-integration-plugin-${{ steps.version.outputs.version }}.tar.gz ]; then
-          # Convert tar.gz to zip for .difypkg format
-          tar -xzf git-integration-plugin-${{ steps.version.outputs.version }}.tar.gz -C temp_extract
-          cd temp_extract
-          zip -r ../git-integration-plugin-${{ steps.version.outputs.version }}.difypkg .
-          cd ..
-          rm -rf temp_extract
+        if [ -f dist/git-integration-plugin-${{ steps.version.outputs.version }}.difypkg ]; then
+          echo "Package created successfully"
+          ls -lh dist/
+        else
+          echo "Package file not found"
+          exit 1
         fi
     
     - name: Generate changelog
