@@ -1,4 +1,4 @@
-dify-plugin-sdk>=0.1.0
+dify-plugin>=0.1.0
 fastapi>=0.104.0
 uvicorn>=0.24.0
 gitpython>=3.1.40
