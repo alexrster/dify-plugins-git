@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from ..endpoints.repositories import repositories
+from .repositories import repositories
 from ..models.repository import RepositoryConfig
 from ..services.auth_service import AuthService
 from ..services.dify_api import DifyAPIClient
