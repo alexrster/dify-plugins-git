@@ -123,13 +123,13 @@ jobs:
               '                        file_path = Path(root) / file' \
               '                        zf.write(file_path)' \
               'print(f"Package created: {PACKAGE_FILE}")' > /tmp/create_package.py
+            python3 /tmp/create_package.py "${PACKAGE_FILE}"
+            rm -f /tmp/create_package.py
           fi
         fi
         
         echo "package_file=${PACKAGE_FILE}" >> $GITHUB_OUTPUT
         echo "Package created: ${PACKAGE_FILE}"
-        python3 /tmp/create_package.py "${PACKAGE_FILE}"
-        rm -f /tmp/create_package.py
         ls -lh dist/
     
     - name: Verify package
