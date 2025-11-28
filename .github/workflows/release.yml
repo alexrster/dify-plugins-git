@@ -38,11 +38,11 @@ jobs:
       run: |
         if command -v dify &> /dev/null; then
           echo "dify_available=true" >> $GITHUB_OUTPUT
-          echo "✅ Dify CLI is available"
+          echo "Dify CLI is available"
           dify --version || echo "Could not get version"
         else
           echo "dify_available=false" >> $GITHUB_OUTPUT
-          echo "⚠️ Dify CLI not found, will use manual packaging (zip)"
+          echo "Dify CLI not found, will use manual packaging (zip)"
         fi
     
     - name: Get version
