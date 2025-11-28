@@ -12,7 +12,6 @@ Runs on every push and pull request to main/develop branches.
 - **lint**: Runs code quality checks (flake8, black, isort, pylint)
 - **security**: Runs security scans (bandit, safety)
 - **build**: Validates manifest and builds plugin package
-- **markdown-lint**: Lints markdown files
 
 ### `release.yml` - Release Workflow
 Runs when a tag is pushed (v*) or manually triggered.
@@ -48,12 +47,6 @@ Runs comprehensive tests daily at 2 AM UTC.
 - Security scans
 - Uploads coverage reports
 
-### `docs.yml` - Documentation Checks
-Validates markdown documentation.
-
-- Checks markdown links
-- Lints markdown files
-- Runs on markdown file changes
 
 ## Workflow Status Badges
 

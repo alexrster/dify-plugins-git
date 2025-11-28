@@ -1,0 +1,27 @@
+# Dify plugin packaging ignore file
+.git/
+.gitignore
+.github/
+tests/
+*.md
+*.log
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+*.difypkg
+*.private.pem
+*.public.pem
+*_keypair.*
+keys/
+.keypair/
+temp/
+storage/
+test-repos/
+

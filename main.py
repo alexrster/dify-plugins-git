@@ -6,7 +6,8 @@ Main entry point for the plugin
 import os
 from typing import Any, Dict
 
-from dify_plugin_sdk import ExtensionPlugin, Plugin
+from dify_plugin.config.config import DifyPluginEnv
+from dify_plugin.plugin import Plugin
 from dotenv import load_dotenv
 from fastapi import FastAPI
 
@@ -25,30 +26,13 @@ app.include_router(repositories_router)
 app.include_router(git_router)
 app.include_router(sync_router)
 
+# Initialize plugin configuration
+config = DifyPluginEnv()
+
 # Initialize plugin
-plugin = ExtensionPlugin(
-    name="git-integration", version="0.1.0", description="Git integration for managing Dify workflows and applications"
-)
-
-
-@plugin.on_activate
-async def on_activate(config: Dict[str, Any]) -> None:
-    """Called when the plugin is activated"""
-    print("Git Integration Plugin activated")
-    # Initialize services if needed
-    # Store configuration
-    plugin.config = config
-
-
-@plugin.on_deactivate
-async def on_deactivate() -> None:
-    """Called when the plugin is deactivated"""
-    print("Git Integration Plugin deactivated")
-
-
-# Register FastAPI app with plugin
-plugin.register_app(app)
+plugin = Plugin(config)
 
 
 if __name__ == "__main__":
-    plugin.run()
+    # Plugin will run automatically
+    pass
