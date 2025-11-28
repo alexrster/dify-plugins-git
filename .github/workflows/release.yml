@@ -33,6 +33,18 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     
+    - name: Check for Dify CLI
+      id: check_dify
+      run: |
+        if command -v dify &> /dev/null; then
+          echo "dify_available=true" >> $GITHUB_OUTPUT
+          echo "✅ Dify CLI is available"
+          dify --version || echo "Could not get version"
+        else
+          echo "dify_available=false" >> $GITHUB_OUTPUT
+          echo "⚠️ Dify CLI not found, will use manual packaging (zip)"
+        fi
+    
     - name: Get version
       id: version
       run: |
@@ -57,32 +69,104 @@ jobs:
         fi
     
     - name: Package plugin
+      id: package
       run: |
         mkdir -p dist
+        VERSION="${{ steps.version.outputs.version }}"
+        PACKAGE_NAME="git-integration-plugin-${VERSION}"
+        PACKAGE_FILE="dist/${PACKAGE_NAME}.difypkg"
+        
         if command -v dify &> /dev/null; then
-          dify plugin package . -o dist/git-integration-plugin-${{ steps.version.outputs.version }}.difypkg
+          echo "Using Dify CLI to package plugin"
+          dify plugin package . -o "${PACKAGE_FILE}"
         else
-          tar -czf dist/git-integration-plugin-${{ steps.version.outputs.version }}.tar.gz \
-            --exclude='.git' \
-            --exclude='tests' \
-            --exclude='.github' \
-            --exclude='*.pyc' \
-            --exclude='__pycache__' \
-            --exclude='.pytest_cache' \
-            --exclude='dist' \
-            --exclude='*.egg-info' \
-            --exclude='.env' \
-            --exclude='*.log' \
-            .
+          echo "Dify CLI not available, creating .difypkg file manually (zip format)"
+          # Create a zip file with .difypkg extension (difypkg is essentially a zip file)
+          # Create .difypkg file (which is a zip file) manually
+          if command -v zip &> /dev/null; then
+            echo "Using zip command"
+            zip -r "${PACKAGE_FILE}" \
+              manifest.yaml \
+              main.py \
+              endpoints/ \
+              services/ \
+              models/ \
+              utils/ \
+              _assets/ \
+              requirements.txt \
+              -x "*.pyc" "*/__pycache__/*" "*/.git/*" "*/.pytest_cache/*" "*/tests/*" "*/.github/*" "*/dist/*" "*/build/*" "*.egg-info/*" "*.log" ".env" "*.private.pem" "*.public.pem"
+          else
+            echo "zip command not available, using Python"
+            python3 << EOF
+import zipfile
+import os
+from pathlib import Path
+import sys
+
+PACKAGE_FILE = "${PACKAGE_FILE}"
+excludes = {'.git', 'tests', '.github', 'dist', 'build', '__pycache__', '.pytest_cache', '.env'}
+files_to_include = [
+    'manifest.yaml', 'main.py', 'requirements.txt',
+    'endpoints', 'services', 'models', 'utils', '_assets'
+]
+
+with zipfile.ZipFile(PACKAGE_FILE, 'w', zipfile.ZIP_DEFLATED) as zf:
+    for item in files_to_include:
+        path = Path(item)
+        if path.is_file():
+            zf.write(path)
+        elif path.is_dir():
+            for root, dirs, files in os.walk(path):
+                dirs[:] = [d for d in dirs if d not in excludes and not d.startswith('.')]
+                for file in files:
+                    if not any(file.endswith(ext) for ext in ['.pyc', '.log', '.pem', '.egg-info']):
+                        file_path = Path(root) / file
+                        zf.write(file_path)
+print(f'Package created: {PACKAGE_FILE}')
+EOF
+          fi
         fi
+        
+        echo "package_file=${PACKAGE_FILE}" >> $GITHUB_OUTPUT
+        echo "Package created: ${PACKAGE_FILE}"
+        ls -lh dist/
     
     - name: Verify package
       run: |
-        if [ -f dist/git-integration-plugin-${{ steps.version.outputs.version }}.difypkg ]; then
-          echo "Package created successfully"
-          ls -lh dist/
+        VERSION="${{ steps.version.outputs.version }}"
+        PACKAGE_FILE="dist/git-integration-plugin-${VERSION}.difypkg"
+        
+        echo "Checking for package file: ${PACKAGE_FILE}"
+        echo "Contents of dist/ directory:"
+        ls -lah dist/ || echo "dist/ directory does not exist"
+        
+        if [ -f "${PACKAGE_FILE}" ]; then
+          echo "✅ Package file found: ${PACKAGE_FILE}"
+          file "${PACKAGE_FILE}" || echo "file command not available"
+          
+          # Check file size (should be > 0)
+          if command -v stat &> /dev/null; then
+            SIZE=$(stat -f%z "${PACKAGE_FILE}" 2>/dev/null || stat -c%s "${PACKAGE_FILE}" 2>/dev/null)
+            if [ "${SIZE}" -gt 0 ]; then
+              echo "✅ Package size: ${SIZE} bytes"
+            else
+              echo "❌ Package file is empty"
+              exit 1
+            fi
+          else
+            # Fallback: use ls to check size
+            LS_OUTPUT=$(ls -lh "${PACKAGE_FILE}" 2>/dev/null)
+            if [ -n "${LS_OUTPUT}" ]; then
+              echo "✅ Package file exists: ${LS_OUTPUT}"
+            else
+              echo "❌ Could not verify package file"
+              exit 1
+            fi
+          fi
         else
-          echo "Package file not found"
+          echo "❌ Package file not found: ${PACKAGE_FILE}"
+          echo "Available files in dist/:"
+          find dist/ -type f 2>/dev/null || echo "No files found"
           exit 1
         fi
     
