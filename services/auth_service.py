@@ -5,9 +5,8 @@ import os
 from typing import Any, Dict, Optional
 
 from cryptography.fernet import Fernet
-from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 
 class AuthService:
@@ -30,15 +29,15 @@ class AuthService:
 
     def _generate_key(self, password: str) -> bytes:
         """Generate encryption key from password"""
-        kdf = PBKDF2(
-            algorithm=hashes.SHA256(), length=32, salt=b"dify_git_plugin_salt", iterations=100000, backend=default_backend()
+        kdf = PBKDF2HMAC(
+            algorithm=hashes.SHA256(), length=32, salt=b"dify_git_plugin_salt", iterations=100000
         )
         return base64.urlsafe_b64encode(kdf.derive(password.encode()))
 
     def _derive_key(self, key: bytes) -> bytes:
         """Derive Fernet key from input key"""
-        kdf = PBKDF2(
-            algorithm=hashes.SHA256(), length=32, salt=b"dify_git_plugin_salt", iterations=100000, backend=default_backend()
+        kdf = PBKDF2HMAC(
+            algorithm=hashes.SHA256(), length=32, salt=b"dify_git_plugin_salt", iterations=100000
         )
         return base64.urlsafe_b64encode(kdf.derive(key))
 

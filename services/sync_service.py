@@ -4,11 +4,11 @@ import asyncio
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from ..models.repository import RepositoryConfig
-from ..models.sync import SyncState, SyncStatus
-from ..models.workflow import ApplicationExport, WorkflowExport
-from .dify_api import DifyAPIClient
-from .git_service import GitService
+from models.repository import RepositoryConfig
+from models.sync import SyncState, SyncStatus
+from models.workflow import ApplicationExport, WorkflowExport
+from services.dify_api import DifyAPIClient
+from services.git_service import GitService
 
 
 class SyncService:

@@ -9,8 +9,8 @@ from typing import Any, Dict, List, Optional
 from git import GitCommandError, InvalidGitRepositoryError, Repo
 from git.exc import GitError
 
-from ..models.repository import RepositoryConfig
-from ..models.workflow import ApplicationExport, WorkflowExport
+from models.repository import RepositoryConfig
+from models.workflow import ApplicationExport, WorkflowExport
 
 
 class GitService:

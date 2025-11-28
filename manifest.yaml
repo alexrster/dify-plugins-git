@@ -1,4 +1,4 @@
-version: "0.1.0"
+version: "0.1.9"
 type: plugin
 author: alexrster
 name: git-integration
@@ -15,7 +15,8 @@ resource:
 plugins:
   tools: []
   models: []
-  endpoints: []
+  endpoints:
+    - endpoints/manifest.yaml
   agent_strategies: []
   datasources: []
   triggers: []
@@ -27,7 +28,7 @@ meta:
   runner:
     language: python
     version: "3.12"
-    entrypoint: main.py
+    entrypoint: main
   minimum_dify_version: "0.6.0"
 permission:
   tool:

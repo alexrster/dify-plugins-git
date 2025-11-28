@@ -5,10 +5,10 @@ from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
-from ..models.repository import Repository, RepositoryConfig
-from ..services.auth_service import AuthService
-from ..services.git_service import GitService
-from ..utils.validators import validate_branch_name, validate_repository_url
+from models.repository import Repository, RepositoryConfig
+from services.auth_service import AuthService
+from services.git_service import GitService
+from utils.validators import validate_branch_name, validate_repository_url
 
 router = APIRouter(prefix="/repositories", tags=["repositories"])
 

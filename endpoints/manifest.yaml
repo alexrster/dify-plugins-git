@@ -1,0 +1,141 @@
+settings: []
+endpoints:
+  - path: /repositories
+    method: GET
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /repositories
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /repositories/{id}
+    method: GET
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /repositories/{id}
+    method: PUT
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /repositories/{id}
+    method: DELETE
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /repositories/{id}/status
+    method: GET
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /git/commit
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /git/push
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /git/pull
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /git/{repository_id}/branches
+    method: GET
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /git/branches
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /git/checkout
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /git/{repository_id}/history
+    method: GET
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /git/diff
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /git/pr
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /sync/export/workflow
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /sync/export/application
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /sync/export/all
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /sync/import/workflow
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /sync/import/application
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /sync/import/all
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /sync
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+  - path: /sync/{repository_id}/status
+    method: GET
+    hidden: false
+    extra:
+      python:
+        source: endpoints/handler.py
+
