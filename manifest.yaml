@@ -1,0 +1,48 @@
+api_version: v1
+kind: extension
+plugin:
+  name: git-integration
+  author: Dify Community
+  description: Git integration plugin for managing Dify workflows and applications with version control
+  version: 0.1.0
+  icon: icon.svg
+  tags:
+    - git
+    - version-control
+    - workflow-management
+  permissions:
+    - tools
+    - llms
+    - apps
+    - storage
+    - endpoints
+  configuration:
+    - name: default_branch
+      type: string
+      default: main
+      description: Default branch name for Git operations
+    - name: auto_sync_enabled
+      type: boolean
+      default: false
+      description: Enable automatic synchronization (opt-in)
+    - name: sync_interval
+      type: number
+      default: 60
+      description: Auto-sync interval in minutes
+    - name: export_format
+      type: string
+      default: json
+      enum:
+        - json
+        - yaml
+      description: Export file format
+    - name: file_naming
+      type: string
+      default: id-name
+      enum:
+        - id
+        - name
+        - id-name
+      description: File naming convention
+
+

@@ -1,0 +1,120 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., v1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Get version
+      id: version
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          VERSION="${{ github.event.inputs.version }}"
+        else
+          VERSION=${GITHUB_REF#refs/tags/}
+        fi
+        echo "version=${VERSION}" >> $GITHUB_OUTPUT
+        echo "Version: ${VERSION}"
+    
+    - name: Update manifest version
+      run: |
+        VERSION="${{ steps.version.outputs.version }}"
+        # Remove 'v' prefix if present
+        VERSION_NUMBER=${VERSION#v}
+        # Update manifest.yaml
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+          sed -i '' "s/version: .*/version: ${VERSION_NUMBER}/" manifest.yaml
+        else
+          sed -i "s/version: .*/version: ${VERSION_NUMBER}/" manifest.yaml
+        fi
+    
+    - name: Package plugin
+      run: |
+        mkdir -p dist
+        if command -v dify &> /dev/null; then
+          dify plugin package . -o dist/
+        else
+          tar -czf dist/git-integration-plugin-${{ steps.version.outputs.version }}.tar.gz \
+            --exclude='.git' \
+            --exclude='tests' \
+            --exclude='.github' \
+            --exclude='*.pyc' \
+            --exclude='__pycache__' \
+            --exclude='.pytest_cache' \
+            --exclude='dist' \
+            --exclude='*.egg-info' \
+            --exclude='.env' \
+            --exclude='*.log' \
+            .
+        fi
+    
+    - name: Create .difypkg file
+      run: |
+        # Create a proper .difypkg file (zip format)
+        cd dist
+        if [ -f git-integration-plugin-${{ steps.version.outputs.version }}.tar.gz ]; then
+          # Convert tar.gz to zip for .difypkg format
+          tar -xzf git-integration-plugin-${{ steps.version.outputs.version }}.tar.gz -C temp_extract
+          cd temp_extract
+          zip -r ../git-integration-plugin-${{ steps.version.outputs.version }}.difypkg .
+          cd ..
+          rm -rf temp_extract
+        fi
+    
+    - name: Generate changelog
+      id: changelog
+      uses: metcalfc/changelog-generator@v4
+      with:
+        myToken: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          dist/*.difypkg
+          dist/*.tar.gz
+        name: Release ${{ steps.version.outputs.version }}
+        body: |
+          ## Changes in ${{ steps.version.outputs.version }}
+          
+          ${{ steps.changelog.outputs.changelog }}
+          
+          ## Installation
+          
+          1. Download the `.difypkg` file
+          2. Upload it to your Dify instance through the plugin management interface
+          3. Activate the plugin and configure it
+        draft: false
+        prerelease: ${{ contains(steps.version.outputs.version, 'alpha') || contains(steps.version.outputs.version, 'beta') || contains(steps.version.outputs.version, 'rc') }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
