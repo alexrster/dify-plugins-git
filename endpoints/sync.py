@@ -5,12 +5,13 @@ from typing import Any, Dict, Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from .repositories import repositories
 from models.repository import RepositoryConfig
 from services.auth_service import AuthService
 from services.dify_api import DifyAPIClient
 from services.git_service import GitService
 from services.sync_service import SyncService
+
+from .repositories import repositories
 
 router = APIRouter(prefix="/sync", tags=["sync"])
 

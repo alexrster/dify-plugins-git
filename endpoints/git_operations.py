@@ -5,10 +5,11 @@ from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from .repositories import repositories
 from models.repository import RepositoryConfig
 from services.auth_service import AuthService
 from services.git_service import GitService
+
+from .repositories import repositories
 
 router = APIRouter(prefix="/git", tags=["git"])
 
