@@ -22,7 +22,7 @@ lint: ## Run all linters
 	flake8 . --count --statistics
 	black --check .
 	isort --check-only .
-	pylint endpoints/ services/ models/ utils/ main.py || true
+	pylint endpoint_handlers/ services/ models/ utils/ main.py || true
 	mypy . || true
 
 format: ## Format code

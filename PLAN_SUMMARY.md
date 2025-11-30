@@ -29,7 +29,7 @@
 dify-plugins-git/
 ├── manifest.yaml          # Plugin configuration
 ├── main.py               # Entry point
-├── endpoints/            # HTTP endpoints
+├── endpoint_handlers/    # HTTP endpoint handlers
 ├── services/             # Core business logic
 ├── models/               # Data models
 └── tests/               # Test suite

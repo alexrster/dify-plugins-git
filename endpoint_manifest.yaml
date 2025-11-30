@@ -1,0 +1,222 @@
+settings:
+  - name: repository_url
+    type: text-input
+    required: true
+    label:
+      en_US: Repository URL
+    help:
+      en_US: GitHub repository URL (e.g., https://github.com/user/repo.git)
+    placeholder:
+      en_US: https://github.com/username/repository.git
+  - name: branch
+    type: text-input
+    required: false
+    default: main
+    label:
+      en_US: Default Branch
+    help:
+      en_US: Default branch name for the repository
+    placeholder:
+      en_US: main
+  - name: auth_type
+    type: select
+    required: false
+    default: none
+    options:
+      - value: none
+        label:
+          en_US: No Authentication
+      - value: token
+        label:
+          en_US: Personal Access Token
+      - value: ssh
+        label:
+          en_US: SSH Key
+    label:
+      en_US: Authentication Type
+    help:
+      en_US: Authentication method for accessing the repository
+  - name: github_token
+    type: secret-input
+    required: false
+    label:
+      en_US: GitHub Token
+    help:
+      en_US: GitHub Personal Access Token (required if auth_type is token)
+    placeholder:
+      en_US: ghp_xxxxxxxxxxxx
+  - name: auto_sync
+    type: boolean
+    required: false
+    default: false
+    label:
+      en_US: Enable Auto-Sync
+    help:
+      en_US: Automatically sync changes between Dify and Git repository
+  - name: sync_interval
+    type: text-input
+    required: false
+    default: "60"
+    label:
+      en_US: Sync Interval (minutes)
+    help:
+      en_US: Interval for automatic synchronization in minutes
+    placeholder:
+      en_US: "60"
+endpoints:
+  - path: /repositories
+    method: GET
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /repositories
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /repositories/{id}
+    method: GET
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /repositories/{id}
+    method: PUT
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /repositories/{id}
+    method: DELETE
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /repositories/{id}/status
+    method: GET
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /git/commit
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /git/push
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /git/pull
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /git/{repository_id}/branches
+    method: GET
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /git/branches
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /git/checkout
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /git/{repository_id}/history
+    method: GET
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /git/diff
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /git/pr
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /sync/export/workflow
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /sync/export/application
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /sync/export/all
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /sync/import/workflow
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /sync/import/application
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /sync/import/all
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /sync
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /sync/{repository_id}/status
+    method: GET
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /repositories/link-application
+    method: POST
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /repositories/application/{application_id}
+    method: GET
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py
+  - path: /repositories/application/{application_id}/unlink
+    method: DELETE
+    hidden: false
+    extra:
+      python:
+        source: endpoint_handlers/handler.py

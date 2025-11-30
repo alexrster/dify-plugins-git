@@ -109,7 +109,7 @@ pytest --cov=. --cov-report=html
 ## Development
 
 ### Project Structure
-- `endpoints/` - HTTP API endpoints
+- `endpoint_handlers/` - HTTP API endpoint handlers
 - `services/` - Business logic
 - `models/` - Data models
 - `utils/` - Utility functions
@@ -118,7 +118,7 @@ pytest --cov=. --cov-report=html
 ### Adding New Features
 
 1. Add service methods in `services/`
-2. Create endpoints in `endpoints/`
+2. Create endpoint handlers in `endpoint_handlers/`
 3. Update models if needed in `models/`
 4. Add tests in `tests/`
 

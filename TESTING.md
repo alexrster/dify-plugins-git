@@ -174,7 +174,7 @@ This confirms:
 
 ### Next Steps
 Once you confirm endpoints are being called, you'll need to:
-1. Implement proper Werkzeug → ASGI conversion in `endpoints/handler.py`
+1. Implement proper Werkzeug → ASGI conversion in `endpoint_handlers/handler.py`
 2. Route requests to the correct FastAPI endpoint handlers
 3. Convert ASGI responses back to Werkzeug Response format
 

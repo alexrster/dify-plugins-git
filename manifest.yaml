@@ -1,4 +1,4 @@
-version: "0.1.11"
+version: "0.1.17"
 type: plugin
 author: alexrster
 name: git-integration
@@ -11,17 +11,31 @@ icon: icon.svg
 icon_dark: icon-dark.svg
 created_at: 2025-11-28T00:00:00Z
 resource:
-  memory: 512
+  memory: 1024000
+  permission:
+    tool:
+      enabled: true
+    model:
+      enabled: true
+    node:
+      enabled: true
+    endpoint:
+      enabled: true
+    app:
+      enabled: true
+    storage:
+      enabled: true
+      size: 10485760
 plugins:
   tools: []
   models: []
   endpoints:
-    - endpoints/manifest.yaml
+    - endpoint_manifest.yaml
   agent_strategies: []
   datasources: []
   triggers: []
 meta:
-  version: "0.0.1"
+  version: "0.1.17"
   arch:
     - amd64
     - arm64
@@ -30,17 +44,3 @@ meta:
     version: "3.12"
     entrypoint: main
   minimum_dify_version: "0.6.0"
-permission:
-  tool:
-    enabled: false
-  model:
-    enabled: false
-  node:
-    enabled: false
-  endpoint:
-    enabled: true
-  app:
-    enabled: true
-  storage:
-    enabled: true
-    size: 10485760

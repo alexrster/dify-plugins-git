@@ -107,7 +107,7 @@ dify-plugins-git/
 ├── PLAN.md                  # Detailed plan
 ├── PLAN_SUMMARY.md          # Quick summary
 ├── IMPLEMENTATION.md        # This file
-├── endpoints/               # HTTP endpoints
+├── endpoint_handlers/        # HTTP endpoint handlers
 │   ├── __init__.py
 │   ├── repositories.py     # Repository management
 │   ├── git_operations.py   # Git operations

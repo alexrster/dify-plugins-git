@@ -20,7 +20,7 @@ This plugin will enable Git-based version control for Dify workflows and applica
    - Required permissions (Apps, Tools, LLMs, Persistent Storage, Endpoints)
    - Configuration schema for Git repository settings
 
-2. **Endpoint Handlers** (`endpoints/`)
+2. **Endpoint Handlers** (`endpoint_handlers/`)
    - HTTP endpoints for Git operations
    - Webhook handlers for Git events
    - Dify API integration endpoints
@@ -92,7 +92,7 @@ dify-plugins-git/
 ├── requirements.txt           # Python dependencies
 ├── .env.example              # Environment variables template
 ├── README.md                 # Documentation
-├── endpoints/
+├── endpoint_handlers/
 │   ├── __init__.py
 │   ├── git_operations.py    # Git operation endpoints
 │   ├── sync.py              # Synchronization endpoints

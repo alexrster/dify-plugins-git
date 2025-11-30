@@ -6,6 +6,10 @@ A Dify plugin that enables Git-based version control for managing workflows and 
 
 See [TESTING.md](TESTING.md) for detailed instructions on how to test if endpoints are up and running.
 
+## UI Setup
+
+See [UI_SETUP_GUIDE.md](UI_SETUP_GUIDE.md) for step-by-step instructions on setting up connections between Dify applications and GitHub repositories through the Dify UI.
+
 ## Features
 
 - 🔗 **Repository Management**: Connect and manage Git repositories
@@ -77,13 +81,16 @@ make sign
 
 ### Plugin Configuration
 
-Configure the plugin through Dify's plugin settings:
+Configure the plugin through Dify's plugin settings UI:
 
-- `default_branch`: Default branch name (default: main)
-- `auto_sync_enabled`: Enable automatic synchronization (default: false, opt-in)
-- `sync_interval`: Auto-sync interval in minutes (default: 60)
-- `export_format`: Export file format - json or yaml (default: json)
-- `file_naming`: File naming convention - id, name, or id-name (default: id-name)
+- **Repository URL** (Required): GitHub repository URL (e.g., `https://github.com/user/repo.git`)
+- **Default Branch**: Default branch name (default: `main`)
+- **Authentication Type**: Choose `none`, `token`, or `ssh` (default: `none`)
+- **GitHub Token**: Personal Access Token (required if using token authentication)
+- **Enable Auto-Sync**: Automatically sync changes (default: `false`, opt-in)
+- **Sync Interval**: Auto-sync interval in minutes (default: `60`)
+
+When you configure these settings in Dify's UI, the plugin will automatically use them when creating repository connections. See [UI_SETUP_GUIDE.md](UI_SETUP_GUIDE.md) for detailed instructions.
 
 ## Usage
 
@@ -175,12 +182,15 @@ POST /sync
 
 ### Repository Management
 
-- `POST /repositories` - Connect a new repository
+- `POST /repositories` - Connect a new repository (uses UI settings if configured)
 - `GET /repositories` - List connected repositories
 - `GET /repositories/{id}` - Get repository details
 - `PUT /repositories/{id}` - Update repository configuration
 - `DELETE /repositories/{id}` - Disconnect repository
 - `GET /repositories/{id}/status` - Get repository status
+- `POST /repositories/link-application` - Link a Dify application to a repository
+- `GET /repositories/application/{application_id}` - Get repository linked to an application
+- `DELETE /repositories/application/{application_id}/unlink` - Unlink application from repository
 
 ### Export Operations
 
@@ -245,7 +255,7 @@ dify-plugins-git/
 ├── manifest.yaml          # Plugin manifest
 ├── main.py               # Entry point
 ├── requirements.txt      # Dependencies
-├── endpoints/            # HTTP endpoints
+├── endpoint_handlers/    # HTTP endpoint handlers
 │   ├── repositories.py
 │   ├── git_operations.py
 │   └── sync.py
