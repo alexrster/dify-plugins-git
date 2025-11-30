@@ -37,6 +37,7 @@ class UpdateRepositoryRequest(BaseModel):
 
 class LinkApplicationRequest(BaseModel):
     """Link a Dify application to a repository"""
+
     application_id: str
     repository_id: str
     workspace_id: str
@@ -196,20 +197,20 @@ async def link_application_to_repository(request: LinkApplicationRequest):
     # Verify repository exists
     if request.repository_id not in repositories:
         raise HTTPException(status_code=404, detail="Repository not found")
-    
+
     # Verify workspace matches
     repo_config = repositories[request.repository_id]
     if repo_config.workspace_id != request.workspace_id:
         raise HTTPException(status_code=403, detail="Repository belongs to a different workspace")
-    
+
     # Link application to repository
     application_repositories[request.application_id] = request.repository_id
-    
+
     return {
         "success": True,
         "application_id": request.application_id,
         "repository_id": request.repository_id,
-        "message": f"Application {request.application_id} linked to repository {request.repository_id}"
+        "message": f"Application {request.application_id} linked to repository {request.repository_id}",
     }
 
 
@@ -218,16 +219,13 @@ async def get_application_repository(application_id: str):
     """Get the repository linked to an application"""
     if application_id not in application_repositories:
         raise HTTPException(status_code=404, detail="No repository linked to this application")
-    
+
     repository_id = application_repositories[application_id]
     if repository_id not in repositories:
         raise HTTPException(status_code=404, detail="Linked repository not found")
-    
+
     config = repositories[repository_id]
-    return {
-        "application_id": application_id,
-        "repository": config.dict()
-    }
+    return {"application_id": application_id, "repository": config.dict()}
 
 
 @router.delete("/application/{application_id}/unlink", response_model=Dict[str, Any])
@@ -235,6 +233,6 @@ async def unlink_application(application_id: str):
     """Unlink an application from its repository"""
     if application_id not in application_repositories:
         raise HTTPException(status_code=404, detail="Application not linked to any repository")
-    
+
     del application_repositories[application_id]
     return {"success": True, "message": f"Application {application_id} unlinked from repository"}
