@@ -87,8 +87,9 @@ jobs:
             echo "Using zip command"
             zip -r "${PACKAGE_FILE}" \
               manifest.yaml \
+              endpoint_manifest.yaml \
               main.py \
-              endpoints/ \
+              endpoint_handlers/ \
               services/ \
               models/ \
               utils/ \
