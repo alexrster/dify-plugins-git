@@ -107,8 +107,8 @@ jobs:
               'PACKAGE_FILE = sys.argv[1]' \
               "excludes = {'.git', 'tests', '.github', 'dist', 'build', '__pycache__', '.pytest_cache', '.env'}" \
               'files_to_include = [' \
-              "    'manifest.yaml', 'main.py', 'requirements.txt'," \
-              "    'endpoints', 'services', 'models', 'utils', '_assets'" \
+              "    'manifest.yaml', 'main.py', 'requirements.txt', 'endpoint_manifest.yaml'," \
+              "    'endpoint_handlers', 'services', 'models', 'utils', '_assets'" \
               ']' \
               '' \
               'with zipfile.ZipFile(PACKAGE_FILE, "w", zipfile.ZIP_DEFLATED) as zf:' \
