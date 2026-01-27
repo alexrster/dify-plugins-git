@@ -14,10 +14,10 @@ class CommitChangesTool(Tool):
     def _invoke(self, tool_parameters: dict[str, Any]):
         """
         Invoke the commit changes tool.
-        
+
         Args:
             tool_parameters: Tool parameters including message, author_name, and author_email
-            
+
         Yields:
             ToolInvokeMessage with the result
         """
@@ -25,26 +25,26 @@ class CommitChangesTool(Tool):
         if not message:
             yield self.create_text_message("❌ Commit message is required")
             return
-        
+
         # Get author info with proper defaults
         user_id = getattr(self.runtime, "user_id", None) or "Dify User"
         author_name = tool_parameters.get("author_name") or str(user_id)
         author_email = tool_parameters.get("author_email") or f"{user_id}@dify.local"
-        
+
         # Ensure author_name and author_email are strings
         author_name = str(author_name) if author_name else "Dify User"
         author_email = str(author_email) if author_email else "dify@example.com"
-        
+
         # Get credentials from runtime
         credentials = self.runtime.credentials or {}
-        
+
         # Validate required credentials
         if not credentials.get("repository_url"):
             yield self.create_text_message(
                 "❌ Repository URL is required. Please configure it in the Git Integration tool settings."
             )
             return
-        
+
         # Create repository config
         try:
             config = RepositoryConfig(
@@ -59,30 +59,29 @@ class CommitChangesTool(Tool):
         except Exception as e:
             yield self.create_text_message(f"❌ Failed to create repository config: {str(e)}")
             return
-        
+
         # Initialize service
         git_service = GitService()
-        
+
         try:
             # Get repository
             repo = git_service.clone_repository(config, None)
             config.local_path = str(git_service.temp_dir / config.id)
-            
+
             # Commit changes - ensure author is a dict with string values
-            author = {
-                "name": str(author_name),
-                "email": str(author_email)
-            }
-            
+            author = {"name": str(author_name), "email": str(author_email)}
+
             # Validate author dict
-            if not isinstance(author, dict) or not isinstance(author.get("name"), str) or not isinstance(author.get("email"), str):
-                yield self.create_text_message(
-                    f"❌ Invalid author information: {author}"
-                )
+            if (
+                not isinstance(author, dict)
+                or not isinstance(author.get("name"), str)
+                or not isinstance(author.get("email"), str)
+            ):
+                yield self.create_text_message(f"❌ Invalid author information: {author}")
                 return
-            
+
             result = git_service.commit(repo, str(message), author)
-            
+
             if result.get("success"):
                 yield self.create_text_message(
                     f"✅ Changes committed successfully!\\n"
@@ -90,13 +89,12 @@ class CommitChangesTool(Tool):
                     f"Message: {message}"
                 )
             else:
-                error_msg = result.get('error', 'Unknown error')
-                yield self.create_text_message(
-                    f"❌ Commit failed: {error_msg}"
-                )
-                
+                error_msg = result.get("error", "Unknown error")
+                yield self.create_text_message(f"❌ Commit failed: {error_msg}")
+
         except Exception as e:
             import traceback
+
             error_details = f"{str(e)}"
             # Add more context if it's an attribute error
             if "'str' object has no attribute" in str(e):

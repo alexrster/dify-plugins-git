@@ -56,19 +56,19 @@ class AuthService:
     def add_token_to_url(self, url: str) -> str:
         """Add authentication token to Git URL"""
         # Get token from decrypted credentials
-        if hasattr(self, '_decrypted_credentials') and self._decrypted_credentials:
-            token = self._decrypted_credentials.get('token')
+        if hasattr(self, "_decrypted_credentials") and self._decrypted_credentials:
+            token = self._decrypted_credentials.get("token")
             if token:
                 # Add token to URL
                 # Handle both https://github.com/user/repo.git and git@github.com:user/repo.git formats
-                if url.startswith('https://'):
+                if url.startswith("https://"):
                     # For HTTPS URLs, add token before domain
                     # https://github.com/user/repo.git -> https://token@github.com/user/repo.git
-                    url = url.replace('https://', f'https://{token}@', 1)
-                elif url.startswith('http://'):
+                    url = url.replace("https://", f"https://{token}@", 1)
+                elif url.startswith("http://"):
                     # For HTTP URLs
-                    url = url.replace('http://', f'http://{token}@', 1)
-                elif '@' in url and '://' not in url:
+                    url = url.replace("http://", f"http://{token}@", 1)
+                elif "@" in url and "://" not in url:
                     # For SSH URLs (git@github.com:user/repo.git), we can't add token
                     # SSH auth should use SSH keys instead
                     pass

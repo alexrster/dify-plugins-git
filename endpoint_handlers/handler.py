@@ -9,21 +9,6 @@ from dify_plugin.core.runtime import Session
 from dify_plugin.interfaces.endpoint import Endpoint
 from werkzeug import Request, Response
 
-# Import handler functions and models
-from endpoint_handlers.repositories import (
-    CreateRepositoryRequest,
-    LinkApplicationRequest,
-    UpdateRepositoryRequest,
-    create_repository,
-    delete_repository,
-    get_application_repository,
-    get_repository,
-    get_repository_status,
-    link_application_to_repository,
-    list_repositories,
-    unlink_application,
-    update_repository,
-)
 from endpoint_handlers.git_operations import (
     CheckoutRequest,
     CommitRequest,
@@ -40,6 +25,22 @@ from endpoint_handlers.git_operations import (
     list_branches,
     pull_changes,
     push_changes,
+)
+
+# Import handler functions and models
+from endpoint_handlers.repositories import (
+    CreateRepositoryRequest,
+    LinkApplicationRequest,
+    UpdateRepositoryRequest,
+    create_repository,
+    delete_repository,
+    get_application_repository,
+    get_repository,
+    get_repository_status,
+    link_application_to_repository,
+    list_repositories,
+    unlink_application,
+    update_repository,
 )
 from endpoint_handlers.sync import (
     ExportAllRequest,
@@ -71,7 +72,7 @@ class FastAPIEndpoint(Endpoint):
         # Convert {param} to (?P<param>[^/]+)
         regex_pattern = re.sub(r"{([^}]+)}", r"(?P<\1>[^/]+)", pattern)
         regex_pattern = f"^{regex_pattern}$"
-        
+
         match = re.match(regex_pattern, path)
         if match:
             return match.groupdict()
@@ -84,7 +85,7 @@ class FastAPIEndpoint(Endpoint):
             body = request.get_data()
             path = request.path
             method = request.method
-            
+
             # Parse request body if available
             request_data = {}
             if body:
@@ -98,7 +99,7 @@ class FastAPIEndpoint(Endpoint):
             # POST /repositories
             if method == "POST" and path == "/repositories":
                 import uuid
-                
+
                 # Merge settings from UI with request data (request data takes precedence)
                 repo_name = request_data.get("name") or f"Repository-{uuid.uuid4().hex[:8]}"
                 repo_url = request_data.get("url") or settings.get("repository_url", "")
@@ -162,7 +163,7 @@ class FastAPIEndpoint(Endpoint):
                 link_req = LinkApplicationRequest(**request_data)
                 result = asyncio.run(link_application_to_repository(link_req))
                 return Response(json.dumps(result), status=200, mimetype="application/json")
-            
+
             # GET /repositories/application/{application_id}
             params = self._match_path("/repositories/application/{application_id}", path)
             if method == "GET" and params:
@@ -313,12 +314,11 @@ class FastAPIEndpoint(Endpoint):
 
             # 404 Not Found
             return Response(
-                json.dumps({"error": f"Endpoint not found: {method} {path}"}),
-                status=404,
-                mimetype="application/json"
+                json.dumps({"error": f"Endpoint not found: {method} {path}"}), status=404, mimetype="application/json"
             )
 
         except Exception as e:
             import traceback
+
             error_details = {"error": str(e), "traceback": traceback.format_exc()}
             return Response(json.dumps(error_details), status=500, mimetype="application/json")
