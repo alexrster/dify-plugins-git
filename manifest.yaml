@@ -1,4 +1,4 @@
-version: "0.2.15"
+version: "0.2.20"
 type: plugin
 author: alexrster
 name: git-integration
@@ -36,7 +36,7 @@ plugins:
   datasources: []
   triggers: []
 meta:
-  version: "0.2.15"
+  version: "0.2.20"
   arch:
     - amd64
     - arm64
