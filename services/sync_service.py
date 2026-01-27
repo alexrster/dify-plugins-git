@@ -234,3 +234,11 @@ class SyncService:
     def update_sync_state(self, repository_id: str, state: SyncState) -> None:
         """Update sync state"""
         self.sync_states[repository_id] = state
+
+    def export_workflow_sync(self, config: RepositoryConfig, workflow_id: str, file_naming: str = "id-name") -> Dict[str, Any]:
+        """Synchronous wrapper for export_workflow"""
+        return asyncio.run(self.export_workflow(config, workflow_id, file_naming))
+
+    def import_workflow_sync(self, config: RepositoryConfig, file_path: str, auto_merge: bool = True) -> Dict[str, Any]:
+        """Synchronous wrapper for import_workflow"""
+        return asyncio.run(self.import_workflow(config, file_path, auto_merge))

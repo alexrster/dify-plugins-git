@@ -1,0 +1,74 @@
+identity:
+  author: alexrster
+  name: git_integration
+  label:
+    en_US: Git Integration
+  description:
+    en_US: Git version control integration for managing Dify workflows and applications
+  icon: icon.svg
+  tags:
+    - productivity
+    - utilities
+
+credentials_for_provider:
+  repository_url:
+    type: text-input
+    required: true
+    label:
+      en_US: Repository URL
+    help:
+      en_US: GitHub repository URL (e.g., https://github.com/user/repo.git)
+    placeholder:
+      en_US: https://github.com/username/repository.git
+  
+  branch:
+    type: text-input
+    required: false
+    default: main
+    label:
+      en_US: Default Branch
+    help:
+      en_US: Default branch name for the repository
+    placeholder:
+      en_US: main
+  
+  auth_type:
+    type: select
+    required: false
+    default: none
+    options:
+      - value: none
+        label:
+          en_US: No Authentication
+      - value: token
+        label:
+          en_US: Personal Access Token
+      - value: ssh
+        label:
+          en_US: SSH Key
+    label:
+      en_US: Authentication Type
+    help:
+      en_US: Authentication method for accessing the repository
+  
+  github_token:
+    type: secret-input
+    required: false
+    label:
+      en_US: GitHub Token
+    help:
+      en_US: GitHub Personal Access Token (required if auth_type is token)
+    placeholder:
+      en_US: ghp_xxxxxxxxxxxx
+
+tools:
+  - tools/export_workflow.yaml
+  - tools/import_workflow.yaml
+  - tools/commit_changes.yaml
+  - tools/push_changes.yaml
+  - tools/create_branch.yaml
+  - tools/list_branches.yaml
+
+extra:
+  python:
+    source: provider/git_provider.py

@@ -1,0 +1,16 @@
+identity:
+  name: list_branches
+  author: alexrster
+  label:
+    en_US: List Git Branches
+
+description:
+  human:
+    en_US: List all branches in the Git repository
+  llm: List all available branches in the Git repository
+
+parameters: []
+
+extra:
+  python:
+    source: tools/list_branches.py

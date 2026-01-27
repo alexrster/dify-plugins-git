@@ -1,0 +1,45 @@
+identity:
+  name: commit_changes
+  author: alexrster
+  label:
+    en_US: Commit Changes to Git
+
+description:
+  human:
+    en_US: Commit pending changes to the Git repository
+  llm: Commit all pending changes to the Git repository with a commit message
+
+parameters:
+  - name: message
+    type: string
+    required: true
+    label:
+      en_US: Commit Message
+    human_description:
+      en_US: The commit message describing the changes
+    llm_description: A descriptive message explaining what changes are being committed
+    form: llm
+
+  - name: author_name
+    type: string
+    required: false
+    label:
+      en_US: Author Name
+    human_description:
+      en_US: Name of the commit author
+    llm_description: The name of the person making the commit
+    form: form
+
+  - name: author_email
+    type: string
+    required: false
+    label:
+      en_US: Author Email
+    human_description:
+      en_US: Email of the commit author
+    llm_description: The email address of the person making the commit
+    form: form
+
+extra:
+  python:
+    source: tools/commit_changes.py

@@ -1,4 +1,4 @@
-version: "0.1.17"
+version: "0.2.15"
 type: plugin
 author: alexrster
 name: git-integration
@@ -27,7 +27,8 @@ resource:
       enabled: true
       size: 10485760
 plugins:
-  tools: []
+  tools:
+    - provider.yaml
   models: []
   endpoints:
     - endpoint_manifest.yaml
@@ -35,7 +36,7 @@ plugins:
   datasources: []
   triggers: []
 meta:
-  version: "0.1.17"
+  version: "0.2.15"
   arch:
     - amd64
     - arm64

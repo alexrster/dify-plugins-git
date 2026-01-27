@@ -1,0 +1,57 @@
+identity:
+  name: export_workflow
+  author: alexrster
+  label:
+    en_US: Export Workflow to Git
+
+description:
+  human:
+    en_US: Export a Dify workflow to a Git repository
+  llm: Export a Dify workflow to a Git repository as a JSON file
+
+parameters:
+  - name: workflow_id
+    type: string
+    required: true
+    label:
+      en_US: Workflow ID
+    human_description:
+      en_US: The ID of the workflow to export
+    llm_description: The unique identifier of the Dify workflow to export to Git
+    form: llm
+
+  - name: file_naming
+    type: select
+    required: false
+    default: id-name
+    label:
+      en_US: File Naming Convention
+    human_description:
+      en_US: How to name the exported file
+    llm_description: The naming convention for the exported workflow file
+    form: form
+    options:
+      - value: id
+        label:
+          en_US: ID only
+      - value: name
+        label:
+          en_US: Name only
+      - value: id-name
+        label:
+          en_US: ID and Name
+
+  - name: commit_message
+    type: string
+    required: false
+    default: "Export workflow"
+    label:
+      en_US: Commit Message
+    human_description:
+      en_US: Git commit message for this export
+    llm_description: The commit message to use when committing the exported workflow to Git
+    form: llm
+
+extra:
+  python:
+    source: tools/export_workflow.py

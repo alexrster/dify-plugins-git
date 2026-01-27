@@ -1,0 +1,25 @@
+identity:
+  name: push_changes
+  author: alexrster
+  label:
+    en_US: Push Changes to Remote
+
+description:
+  human:
+    en_US: Push committed changes to the remote Git repository
+  llm: Push all committed changes to the remote Git repository
+
+parameters:
+  - name: branch
+    type: string
+    required: false
+    label:
+      en_US: Branch Name
+    human_description:
+      en_US: The branch to push to (defaults to configured branch)
+    llm_description: The name of the branch to push changes to, or empty to use the default branch
+    form: llm
+
+extra:
+  python:
+    source: tools/push_changes.py

@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from git import GitCommandError, InvalidGitRepositoryError, Repo
+from git import Actor, GitCommandError, InvalidGitRepositoryError, Repo
 from git.exc import GitError
 
 from models.repository import RepositoryConfig
@@ -89,16 +89,28 @@ class GitService:
     def commit(self, repo: Repo, message: str, author: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
         """Commit changes to repository"""
         try:
+            # Validate author parameter
+            author_actor = None
+            if author is not None:
+                if not isinstance(author, dict):
+                    return {
+                        "success": False,
+                        "error": f"Author must be a dict, got {type(author).__name__}: {author}"
+                    }
+                # Ensure author has required keys with string values
+                author_name = str(author.get('name', 'Dify'))
+                author_email = str(author.get('email', 'dify@example.com'))
+                # Create Actor object for GitPython
+                author_actor = Actor(author_name, author_email)
+            
             # Check if there are changes
             if repo.is_dirty() or repo.untracked_files:
                 # Add all changes
                 repo.git.add(A=True)
 
-                # Commit
-                if author:
-                    repo.index.commit(
-                        message, author=f"{author.get('name', 'Dify')} <{author.get('email', 'dify@example.com')}>"
-                    )
+                # Commit with author if provided
+                if author_actor:
+                    repo.index.commit(message, author=author_actor)
                 else:
                     repo.index.commit(message)
 
@@ -107,6 +119,8 @@ class GitService:
                 return {"success": False, "error": "No changes to commit"}
         except GitCommandError as e:
             return {"success": False, "error": str(e)}
+        except Exception as e:
+            return {"success": False, "error": f"Unexpected error: {str(e)}"}
 
     def push(self, repo: Repo, branch: Optional[str] = None, auth_type: str = "none", auth_handler=None) -> Dict[str, Any]:
         """Push changes to remote"""
@@ -116,12 +130,27 @@ class GitService:
             if auth_type == "ssh" and auth_handler:
                 with auth_handler.get_ssh_environment():
                     repo.remotes.origin.push(branch)
+            elif auth_type == "token" and auth_handler:
+                # For token auth, we need to update the remote URL with the token
+                # Get the current remote URL
+                remote_url = repo.remotes.origin.url
+                # Add token to URL if not already present
+                if auth_handler and hasattr(auth_handler, '_decrypted_credentials'):
+                    token = auth_handler._decrypted_credentials.get('token')
+                    if token and token not in remote_url:
+                        # Update remote URL with token
+                        url_with_token = auth_handler.add_token_to_url(remote_url)
+                        repo.remotes.origin.set_url(url_with_token)
+                repo.remotes.origin.push(branch)
             else:
+                # No auth or public repo
                 repo.remotes.origin.push(branch)
 
             return {"success": True, "branch": branch}
         except GitCommandError as e:
             return {"success": False, "error": str(e)}
+        except Exception as e:
+            return {"success": False, "error": f"Unexpected error: {str(e)}"}
 
     def get_branches(self, repo: Repo) -> List[Dict[str, Any]]:
         """Get list of branches"""
@@ -208,19 +237,32 @@ class GitService:
 
     def export_workflow(self, repo: Repo, workflow: WorkflowExport, file_naming: str = "id-name") -> str:
         """Export workflow to Git repository"""
+        # Validate workflow parameter
+        if not isinstance(workflow, WorkflowExport):
+            raise TypeError(f"workflow must be a WorkflowExport instance, got {type(workflow).__name__}")
+        
+        # Ensure workflow.name is a string
+        if not hasattr(workflow, 'name') or not isinstance(workflow.name, str):
+            workflow_name = str(getattr(workflow, 'name', 'Unnamed Workflow'))
+        else:
+            workflow_name = workflow.name
+        
+        # Ensure workflow.id is a string
+        workflow_id = str(getattr(workflow, 'id', 'unknown'))
+        
         workflows_dir = Path(repo.working_dir) / "workflows"
         workflows_dir.mkdir(exist_ok=True)
 
         # Determine filename
         if file_naming == "id":
-            filename = f"workflow-{workflow.id}.json"
+            filename = f"workflow-{workflow_id}.json"
         elif file_naming == "name":
             # Sanitize name for filename
-            safe_name = "".join(c for c in workflow.name if c.isalnum() or c in (" ", "-", "_")).strip()
+            safe_name = "".join(c for c in workflow_name if c.isalnum() or c in (" ", "-", "_")).strip()
             filename = f"workflow-{safe_name}.json"
         else:  # id-name
-            safe_name = "".join(c for c in workflow.name if c.isalnum() or c in (" ", "-", "_")).strip()
-            filename = f"workflow-{workflow.id}-{safe_name}.json"
+            safe_name = "".join(c for c in workflow_name if c.isalnum() or c in (" ", "-", "_")).strip()
+            filename = f"workflow-{workflow_id}-{safe_name}.json"
 
         file_path = workflows_dir / filename
 

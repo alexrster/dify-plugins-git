@@ -1,0 +1,36 @@
+identity:
+  name: import_workflow
+  author: alexrster
+  label:
+    en_US: Import Workflow from Git
+
+description:
+  human:
+    en_US: Import a Dify workflow from a Git repository
+  llm: Import a Dify workflow from a Git repository JSON file
+
+parameters:
+  - name: file_path
+    type: string
+    required: true
+    label:
+      en_US: File Path
+    human_description:
+      en_US: Path to the workflow file in the repository
+    llm_description: The path to the workflow JSON file in the Git repository (e.g., workflows/workflow-123.json)
+    form: llm
+
+  - name: auto_merge
+    type: boolean
+    required: false
+    default: true
+    label:
+      en_US: Auto Merge
+    human_description:
+      en_US: Automatically merge changes if there are conflicts
+    llm_description: Whether to automatically merge changes when importing the workflow
+    form: form
+
+extra:
+  python:
+    source: tools/import_workflow.py

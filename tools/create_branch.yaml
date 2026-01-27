@@ -1,0 +1,35 @@
+identity:
+  name: create_branch
+  author: alexrster
+  label:
+    en_US: Create Git Branch
+
+description:
+  human:
+    en_US: Create a new branch in the Git repository
+  llm: Create a new branch in the Git repository for feature development or experimentation
+
+parameters:
+  - name: branch_name
+    type: string
+    required: true
+    label:
+      en_US: Branch Name
+    human_description:
+      en_US: Name of the new branch to create
+    llm_description: The name for the new Git branch
+    form: llm
+
+  - name: from_branch
+    type: string
+    required: false
+    label:
+      en_US: Source Branch
+    human_description:
+      en_US: Branch to create from (defaults to current branch)
+    llm_description: The name of the branch to create the new branch from, or empty to use the current branch
+    form: form
+
+extra:
+  python:
+    source: tools/create_branch.py
